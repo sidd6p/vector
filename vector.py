@@ -13,11 +13,20 @@ class Vector(object):
         except TypeError:
             raise TypeError('Coordinates should be iterable and all values should be int/float')
     
+    def __add__(self, v: object) -> object:
+        added_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
+        return Vector(added_coordinates)
+    
+    def __sub__(self, v: object) -> object:
+        added_coordinates = [x - y for x, y in zip(self.coordinates, v.coordinates)]
+        return Vector(added_coordinates)
+    
     def __str__(self) -> str:
         return f'Vector: {self.coordinates}'
     
     def __eq__(self, value: object) -> bool:
         return self.coordinates == value.coordinates
+
 
 v1 = Vector([1, 2, 3])
 print(v1)
@@ -25,3 +34,9 @@ print(v1)
 v2 = Vector([3, 4, 5])
 v3 = Vector([1, 2, 3])
 print(v1 == v3)
+
+v4 = v2 + v3
+print(v4)
+
+v5 = v2 - v3
+print(v5)
