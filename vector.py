@@ -22,9 +22,6 @@ class Vector(object):
         except TypeError:
             raise TypeError('Coordinates should be iterable and all values should be int/float')
     
-    def get_magnitute(self) -> Decimal:
-        return Decimal(sqrt(sum([x*x for x in self.coordinates])))
-    
     def get_unit_vector(self) -> Decimal:
         try:
             if self.magnitute == Decimal('0.0'):
@@ -34,14 +31,14 @@ class Vector(object):
         except ZeroDivisionError:
             raise ZeroDivisionError(f"Magnitute is zero, {self} is a zero vector.")
     
-    def get_angle_with(self, v: object, in_degrees=False) -> Decimal:
+    def get_angle_with(self, v: object, in_degrees=False) -> float:
         dot_product = self * v
-        angle_in_radian = acos(dot_product / (self.get_magnitute() * v.get_magnitute()))
+        angle_in_radian = acos(dot_product / (self.magnitute * v.magnitute))
         if in_degrees:
             degree_per_radian = 180. / pi
-            angle_in_degree = Decimal(angle_in_radian * degree_per_radian)
-            return angle_in_degree
-        return angle_in_radian
+            angle_in_degree = angle_in_radian * degree_per_radian
+            return round(angle_in_degree, 3)
+        return round(angle_in_radian, 3)
     
     def __add__(self, v: object) -> object:
         new_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
@@ -79,19 +76,19 @@ class Vector(object):
         return self.coordinates == value.coordinates
 
 
-# v1 = Vector([1, 2, 3])
-# print(v1)
+v1 = Vector([1, 2, 3])
+print(v1)
 
 v2 = Vector([2.571, 8.259, 3.985])
 v3 = Vector([2.571, 8.259, 3.985])
-# print(v2 == v3)
+print(v2 == v3)
 
-# print(f"v2 + v3 is equal to {v2 + v3}")
-# print(f"v2 - v3 is equal to {v2 - v3}")
-# print(f"v2 * 10 is equal to {v2 * 10 }")
-# print(f"Dot product of two v2 and v3 is equal to {v2 * v3}")
+print(f"v2 + v3 is equal to {v2 + v3}")
+print(f"v2 - v3 is equal to {v2 - v3}")
+print(f"v2 * 10 is equal to {v2 * 10 }")
+print(f"Dot product of two v2 and v3 is equal to {v2 * v3}")
 
-print(f"||v2|| equals to {v2.get_magnitute()}")
+print(f"||v2|| equals to {v2.magnitute}")
 print(f"Unit vector of v2 equals to {v2.get_unit_vector()}")
 
 print(f"Angle between two v2 and v3 is equal to {v2.get_angle_with(v3, in_degrees=True)}")
