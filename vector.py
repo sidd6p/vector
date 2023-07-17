@@ -58,11 +58,11 @@ class Vector(object):
     def is_parallel_to(self, v: object) -> bool:
         return self.get_angle_with(v) == 0
 
-    def projection_on(self, v: object) -> Decimal:
+    def projection_on(self, v: object) -> object:
         try:
             if v.is_zero():
                 raise ZeroDivisionError
-            return v * ((self * v) / v.magnitute)
+            return v.get_unit_vector() * ((self * v) / v.magnitute)
         except ZeroDivisionError:
             raise ZeroDivisionError(f"{v} is zero-vector")
 
