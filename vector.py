@@ -14,13 +14,21 @@ class Vector(object):
             raise TypeError('Coordinates should be iterable and all values should be int/float')
     
     def __add__(self, v: object) -> object:
-        added_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
-        return Vector(added_coordinates)
+        new_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
+        return Vector(new_coordinates)
     
     def __sub__(self, v: object) -> object:
-        added_coordinates = [x - y for x, y in zip(self.coordinates, v.coordinates)]
-        return Vector(added_coordinates)
-    
+        new_coordinates = [x - y for x, y in zip(self.coordinates, v.coordinates)]
+        return Vector(new_coordinates)
+
+    def __mul__(self, v: object) -> object:
+        if isinstance(v, (int, float)):
+            new_coordinates = [x * v for x in self.coordinates]
+            return Vector(new_coordinates)
+        elif isinstance(v, object):
+            new_coordinates = [x * y for x, y in zip(self.coordinates, v.coordinates)]
+            return Vector(new_coordinates)
+        
     def __str__(self) -> str:
         return f'Vector: {self.coordinates}'
     
@@ -40,3 +48,9 @@ print(v4)
 
 v5 = v2 - v3
 print(v5)
+
+v6 = v2 * 10 
+print(v6)
+
+v7 = v2 * v3 
+print(v7)
