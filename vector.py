@@ -58,6 +58,14 @@ class Vector(object):
     def is_parallel_to(self, v: object) -> bool:
         return self.get_angle_with(v) == 0
 
+    def projection_on(self, v: object) -> object:
+        try:
+            if v.is_zero():
+                raise ZeroDivisionError
+            return (self * v) / v.magnitute
+        except ZeroDivisionError:
+            raise ZeroDivisionError(f"{v} is zero-vector")
+
     def __add__(self, v: object) -> object:
         new_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
         return Vector(new_coordinates)
@@ -116,3 +124,4 @@ print(
 
 print(f"V2 is orthogonal to V3? {v2.is_orthogonal_to(v3)}")
 print(f"V2 is parallel to V3? {v2.is_parallel_to(v3)}")
+print(f"V2's projection on V3 equals to {v2.projection_on(v3)}")
