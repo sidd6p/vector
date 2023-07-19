@@ -1,5 +1,5 @@
 from typing import Union
-from math import sqrt, pi, acos
+from math import sqrt, pi, acos, sin
 from decimal import Decimal, getcontext
 
 getcontext().prec = 30
@@ -58,13 +58,19 @@ class Vector(object):
     def is_parallel_to(self, v: object) -> bool:
         return self.get_angle_with(v) == 0
 
-    def projection_on(self, v: object) -> object:
+    def get_parallel_to(self, v: object) -> object:
         try:
             if v.is_zero():
                 raise ZeroDivisionError
-            return v.get_unit_vector() * ((self * v) / v.magnitute)
+            return v.get_unit_vector() * (self * v / v.magnitute)
         except ZeroDivisionError:
             raise ZeroDivisionError(f"{v} is zero-vector")
+
+    def get_orthognal_to(self, v: object) -> object:
+        return self - self.get_parallel_to(v)
+
+    def get_cross_product(self, v: object) -> object:
+        pass
 
     def __add__(self, v: object) -> object:
         new_coordinates = [x + y for x, y in zip(self.coordinates, v.coordinates)]
@@ -107,7 +113,7 @@ v1 = Vector([1, 2, 3])
 print(v1)
 
 v2 = Vector([1, 2, 3])
-v3 = Vector([1, 2, 3])
+v3 = Vector([1, 2, 9])
 print(v2 == v3)
 
 print(f"v2 + v3 is equal to {v2 + v3}")
@@ -124,4 +130,11 @@ print(
 
 print(f"V2 is orthogonal to V3? {v2.is_orthogonal_to(v3)}")
 print(f"V2 is parallel to V3? {v2.is_parallel_to(v3)}")
-print(f"V2's projection on V3 equals to {v2.projection_on(v3)}")
+
+print(f"V2's component parallel to V3 equals to {v2.get_parallel_to(v3)}")
+print(f"V2's component orthogonal to V3 equals to {v2.get_orthognal_to(v3)}")
+print(
+    f"V2 = V2's component parallel to V3 + V2's component orthogonal to V3? {v2 == v2.get_parallel_to(v3) + v2.get_orthognal_to(v3)}"
+)
+print(v3.get_angle_with(v2.get_parallel_to(v3), in_degrees=True))
+print(v3.get_angle_with(v2.get_orthognal_to(v3), in_degrees=True))
