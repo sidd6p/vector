@@ -1,5 +1,5 @@
 from typing import Union
-from math import sqrt, pi, acos, sin
+from math import sqrt, pi, acos
 from decimal import Decimal, getcontext
 
 getcontext().prec = 30
@@ -132,6 +132,25 @@ class Vector(object):
         """
         return self.magnitude < tolerance
 
+    def is_orthogonal_to(self, v: object) -> bool:
+        """
+        Checks if the vector is orthogonal to another vector.
+
+        :param v: The other vector to check for orthogonality.
+        :return: True if the vectors are orthogonal, False otherwise.
+        """
+        print((self.is_zero == 0))
+        return (self.get_angle_with(v) == 90) or self.is_zero() or v.is_zero()
+
+    def is_parallel_to(self, v: object) -> bool:
+        """
+        Checks if the vector is parallel to another vector.
+
+        :param v: The other vector to check for parallelism.
+        :return: True if the vectors are parallel, False otherwise.
+        """
+        return self.get_angle_with(v) == 0
+
     def get_unit_vector(self) -> Decimal:
         """
         Returns the unit vector of the current vector.
@@ -164,25 +183,6 @@ class Vector(object):
             return round(angle_in_degree, 3)
         return round(angle_in_radian, 3)
 
-    def is_orthogonal_to(self, v: object) -> bool:
-        """
-        Checks if the vector is orthogonal to another vector.
-
-        :param v: The other vector to check for orthogonality.
-        :return: True if the vectors are orthogonal, False otherwise.
-        """
-        print((self.is_zero == 0))
-        return (self.get_angle_with(v) == 90) or self.is_zero() or v.is_zero()
-
-    def is_parallel_to(self, v: object) -> bool:
-        """
-        Checks if the vector is parallel to another vector.
-
-        :param v: The other vector to check for parallelism.
-        :return: True if the vectors are parallel, False otherwise.
-        """
-        return self.get_angle_with(v) == 0
-
     def get_parallel_to(self, v: object) -> object:
         """
         Returns the component of the vector parallel to another vector.
@@ -213,79 +213,124 @@ class Vector(object):
         :param v: The other vector to calculate the cross product with.
         :return: The cross product of the two vectors.
         """
-        pass
+        try:
+            if self.dimensions != 3 or v.dimensions != 3:
+                raise ValueError
+            new_coordinates = [
+                self.coordinates[1] * v.coordinates[2]
+                - self.coordinates[2] * v.coordinates[1],
+                self.coordinates[2] * v.coordinates[0]
+                - self.coordinates[0] * v.coordinates[2],
+                self.coordinates[0] * v.coordinates[1]
+                - self.coordinates[1] * v.coordinates[0],
+            ]
+            return Vector(new_coordinates)
+        except ValueError:
+            raise ValueError(
+                f"{self, v}, both should have 3 dimension for cross-product"
+            )
+
+    def get_parallelogram_area_with(self, v: object) -> float:
+        """
+        Calculates the area of the parallelogram formed by the two vectors.
+
+        :param v: The other vector to calculate the area with.
+        :return: The area of the parallelogram.
+        """
+        return self.get_cross_product(v).magnitude
+
+    def get_triangle_area_with(self, v: object) -> float:
+        """
+        Calculates the area of the triangle formed by the two vectors.
+
+        :param v: The other vector to calculate the area with.
+        :return: The area of the triangle.
+        """
+        return self.get_cross_product(v).magnitude / 2
 
 
-# Create two Vector objects v1 and v2
-v1 = Vector([1, 2, 0])
-v2 = Vector([1, 2, 9])
+# # Create two Vector objects v1 and v2
+# v1 = Vector([0, 0, 1])
+# v2 = Vector([1, 2, 9])
 
-# Print the vectors v1 and v2
-print("v1:", v1)
-print("v2:", v2)
+# # Print the vectors v1 and v2
+# print("v1:", v1)
+# print("v2:", v2)
 
-# Check if v1 is equal to v2 and print the result
-are_v1_and_v2_equal = v1 == v2
-print(f"Are v1 and v2 equal? {are_v1_and_v2_equal}")
+# # Check if v1 is equal to v2 and print the result
+# are_v1_and_v2_equal = v1 == v2
+# print(f"Are v1 and v2 equal? {are_v1_and_v2_equal}")
 
-# Perform vector addition, subtraction, scalar multiplication, and dot product
-v1_plus_v2 = v1 + v2
-v1_minus_v2 = v1 - v2
-v1_times_10 = v1 * 10
-dot_product_v1_v2 = v1 * v2
-v1_by_10 = v1 / 10
-v1_divides_by_v2 = v1 / v2
+# # Perform vector addition, subtraction, scalar multiplication, and dot product
+# v1_plus_v2 = v1 + v2
+# v1_minus_v2 = v1 - v2
+# v1_times_10 = v1 * 10
+# dot_product_v1_v2 = v1 * v2
+# v1_by_10 = v1 / 10
+# v1_divides_by_v2 = v1 / v2
 
-# Print the results of the operations
-print(f"v1 + v2 is equal to {v1_plus_v2}")
-print(f"v1 - v2 is equal to {v1_minus_v2}")
-print(f"v1 * 10 is equal to {v1_times_10}")
-print(f"Dot product of v1 and v2 is equal to {dot_product_v1_v2}")
-print(f"v1 / 10 is equal to {v1_by_10}")
-print(f"v1 divides by v2 is equal to {v1_divides_by_v2}")
+# # Print the results of the operations
+# print(f"v1 + v2 is equal to {v1_plus_v2}")
+# print(f"v1 - v2 is equal to {v1_minus_v2}")
+# print(f"v1 * 10 is equal to {v1_times_10}")
+# print(f"Dot product of v1 and v2 is equal to {dot_product_v1_v2}")
+# print(f"v1 / 10 is equal to {v1_by_10}")
+# print(f"v1 divides by v2 is equal to {v1_divides_by_v2}")
 
-# Calculate the magnitude of v1 and print the result
-magnitude_v1 = v1.magnitude
-print(f"The magnitude of v1 is {magnitude_v1}")
+# # Calculate the magnitude of v1 and print the result
+# magnitude_v1 = v1.magnitude
+# print(f"The magnitude of v1 is {magnitude_v1}")
 
-# Calculate the unit vector of v1 and print the result
-unit_vector_v1 = v1.get_unit_vector()
-print(f"The unit vector of v1 is {unit_vector_v1}")
+# # Calculate the unit vector of v1 and print the result
+# unit_vector_v1 = v1.get_unit_vector()
+# print(f"The unit vector of v1 is {unit_vector_v1}")
 
-# Calculate the angle between v1 and v2 (in radians) and print the result
-angle_v1_v2_radians = v1.get_angle_with(v2, in_degrees=False)
-print(f"Angle between v1 and v2 (in radians) is equal to {angle_v1_v2_radians}")
+# # Calculate the angle between v1 and v2 (in radians) and print the result
+# angle_v1_v2_radians = v1.get_angle_with(v2, in_degrees=False)
+# print(f"Angle between v1 and v2 (in radians) is equal to {angle_v1_v2_radians}")
 
-# Check if v1 is orthogonal and parallel to v2 and print the results
-is_orthogonal_v1_v2 = v1.is_orthogonal_to(v2)
-is_parallel_v1_v2 = v1.is_parallel_to(v2)
-print(f"Is v1 orthogonal to v2? {is_orthogonal_v1_v2}")
-print(f"Is v1 parallel to v2? {is_parallel_v1_v2}")
+# # Check if v1 is orthogonal and parallel to v2 and print the results
+# is_orthogonal_v1_v2 = v1.is_orthogonal_to(v2)
+# is_parallel_v1_v2 = v1.is_parallel_to(v2)
+# print(f"Is v1 orthogonal to v2? {is_orthogonal_v1_v2}")
+# print(f"Is v1 parallel to v2? {is_parallel_v1_v2}")
 
-# Calculate the component of v1 parallel and orthogonal to v2 and print the results
-v1_parallel_to_v2 = v1.get_parallel_to(v2)
-v1_orthogonal_to_v2 = v1.get_orthogonal_to(v2)
-print(f"V1's component parallel to v2 is {v1_parallel_to_v2}")
-print(f"V1's component orthogonal to v2 is {v1_orthogonal_to_v2}")
+# # Calculate the component of v1 parallel and orthogonal to v2 and print the results
+# v1_parallel_to_v2 = v1.get_parallel_to(v2)
+# v1_orthogonal_to_v2 = v1.get_orthogonal_to(v2)
+# print(f"V1's component parallel to v2 is {v1_parallel_to_v2}")
+# print(f"V1's component orthogonal to v2 is {v1_orthogonal_to_v2}")
 
-# Check if v1 can be represented as the sum of its components parallel and orthogonal to v2 and print the result
-is_v1_parallel_orthogonal_to_v2 = v1 == v1_parallel_to_v2 + v1_orthogonal_to_v2
-print(
-    f"V1 = V1's component parallel to v2 + V1's component orthogonal to v2? {is_v1_parallel_orthogonal_to_v2}"
-)
+# # Check if v1 can be represented as the sum of its components parallel and orthogonal to v2 and print the result
+# is_v1_parallel_orthogonal_to_v2 = v1 == v1_parallel_to_v2 + v1_orthogonal_to_v2
+# print(
+#     f"V1 = V1's component parallel to v2 + V1's component orthogonal to v2? {is_v1_parallel_orthogonal_to_v2}"
+# )
 
-# Calculate the angle between v2 and its component parallel to v1 (in degrees) and print the result
-angle_v2_with_parallel_to_v1 = v2.get_angle_with(
-    v1.get_parallel_to(v2), in_degrees=True
-)
-print(
-    f"Angle between v2 and its component parallel to v1 (in degrees) is {angle_v2_with_parallel_to_v1}"
-)
+# # Calculate the angle between v2 and its component parallel to v1 (in degrees) and print the result
+# angle_v2_with_parallel_to_v1 = v2.get_angle_with(
+#     v1.get_parallel_to(v2), in_degrees=True
+# )
+# print(
+#     f"Angle between v2 and its component parallel to v1 (in degrees) is {angle_v2_with_parallel_to_v1}"
+# )
 
-# Calculate the angle between v2 and its component orthogonal to v1 (in degrees) and print the result
-angle_v2_with_orthogonal_to_v1 = v2.get_angle_with(
-    v1.get_orthogonal_to(v2), in_degrees=True
-)
-print(
-    f"Angle between v2 and its component orthogonal to v1 (in degrees) is {angle_v2_with_orthogonal_to_v1}"
-)
+# # Calculate the angle between v2 and its component orthogonal to v1 (in degrees) and print the result
+# angle_v2_with_orthogonal_to_v1 = v2.get_angle_with(
+#     v1.get_orthogonal_to(v2), in_degrees=True
+# )
+# print(
+#     f"Angle between v2 and its component orthogonal to v1 (in degrees) is {angle_v2_with_orthogonal_to_v1}"
+# )
+
+# # Calculate the cross product of v1 and v2 and print the result
+# cross_v1_v2 = v1.get_cross_product(v2)
+# print(f"v1 x v2 is equal to: {cross_v1_v2}")
+
+# # Calculate the area of the parallelogram formed by v1 and v2 and print the result
+# parallelogram_area = v1.get_parallelogram_area_with(v2)
+# print(f"Parallelogram area between v1 and v2 is: {parallelogram_area}")
+
+# # Calculate the area of the triangle formed by v1 and v2 and print the result
+# triangle_area = v1.get_triangle_area_with(v2)
+# print(f"Triangle area between v1 and v2 is: {triangle_area}")
