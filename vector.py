@@ -81,6 +81,12 @@ class Vector(object):
                 raise ValueError("Dimensions should be equal")
 
     def __truediv__(self, v: object) -> object:
+        """
+        Divides the vector by a scalar or calculates the division with another vector.
+
+        :param v: The scalar value or the other vector.
+        :return: The result of the division.
+        """
         if isinstance(v, (int, float, Decimal)):
             v = Decimal(v)
             try:
@@ -123,7 +129,7 @@ class Vector(object):
         """
         return self.coordinates == value.coordinates
 
-    def is_zero(self, tolerance: float = 1e-10):
+    def is_zero(self, tolerance: float = 1e-10) -> bool:
         """
         Checks if the vector is a zero vector.
 
@@ -139,7 +145,6 @@ class Vector(object):
         :param v: The other vector to check for orthogonality.
         :return: True if the vectors are orthogonal, False otherwise.
         """
-        print((self.is_zero == 0))
         return (self.get_angle_with(v) == 90) or self.is_zero() or v.is_zero()
 
     def is_parallel_to(self, v: object) -> bool:
@@ -165,7 +170,7 @@ class Vector(object):
         except ZeroDivisionError:
             raise ZeroDivisionError(f"magnitude is zero, {self} is a zero vector.")
 
-    def get_angle_with(self, v: object, in_degrees=False) -> float:
+    def get_angle_with(self, v: object, in_degrees: bool = False) -> float:
         """
         Calculates the angle between two vectors.
 
